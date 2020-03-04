@@ -6,7 +6,7 @@ open import Agda.Builtin.List
 open import Agda.Builtin.IO
 open import Agda.Builtin.Unit
 
-{-# IMPORT Criterion.Main #-}
+{-# FOREIGN GHC import Criterion.Main #-}
 
 postulate
   Benchmarkable : Set
@@ -17,13 +17,13 @@ postulate
   bgroup        : String → List Benchmark → Benchmark
   defaultMain   : List Benchmark → IO ⊤
 
-{-# COMPILED_TYPE Benchmarkable Criterion.Main.Benchmarkable #-}
-{-# COMPILED_TYPE Benchmark     Criterion.Main.Benchmark     #-}
+{-# COMPILE GHC Benchmarkable = type Criterion.Main.Benchmarkable #-}
+{-# COMPILE GHC Benchmark     = type Criterion.Main.Benchmark     #-}
 
-{-# COMPILED whnf   (\ _ _ _ _ -> Criterion.Main.whnf)   #-}
-{-# COMPILED whnfIO (\ _ _     -> Criterion.Main.whnfIO) #-}
+{-# COMPILE GHC whnf   = \ _ _ _ _ -> Criterion.Main.whnf   #-}
+{-# COMPILE GHC whnfIO = \ _ _     -> Criterion.Main.whnfIO #-}
 
-{-# COMPILED bench  (Criterion.Main.bench . Data.Text.unpack)  #-}
-{-# COMPILED bgroup (Criterion.Main.bgroup . Data.Text.unpack) #-}
+{-# COMPILE GHC bench  = Criterion.Main.bench  . Data.Text.unpack #-}
+{-# COMPILE GHC bgroup = Criterion.Main.bgroup . Data.Text.unpack #-}
 
-{-# COMPILED defaultMain Criterion.Main.defaultMain #-}
+{-# COMPILE GHC defaultMain = Criterion.Main.defaultMain #-}
